@@ -1,0 +1,396 @@
+<head>
+    <h6 class="intro_top">Dieses online-Werkzeug dient dazu Zahlenfolgen auf ihre Zufälligkeit zu untersuchen.</h6>
+    <h6 class="intro">Dafür kann auf der linken Seite Folgen von Münzwürfen und auf der rechten Seite Folgen von der Summe zweier Würfeln simuliert werden.</h6>
+    <h6 class="intro">Diese Folgen können dann, nach der Eingabe und dem Drücken des Knopfes "Eingabe nehmen", durch das Betätigen der Test-Knöpfe, auf ihre Zufälligkeit getestet werden.</h6>
+    <h6 class="intro">Nach Durchführung eines Tests wird darunter ein Wert angezeigt, welcher aussagt wie zufällig die Zahlenfolge bei diesen Test abschneidet.</h6>
+    <h6 class="intro">Je niedriger der Wert, desto wahrscheinlicher ist die Folge zufällig.</h6>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="row">
+        <div class="column">
+            <div class="coins">
+                <button class="coinsButton" type="button" onclick="addTail()" id="tail">
+                    <img src="Zahl.png">
+                </button>
+                <button class="coinsButton" type="button" onclick="addHead() "id="head">
+                    <img src="Kopf.png">
+                </button>
+            </div>
+            <div class="textField">
+                <h4>
+                    Mindestens 20 Ziffern müssen eingegeben werden
+                </h4>
+                <h4>
+                    Alternativ die Zahlenfolge mit Einsen und Nullen eingeben:
+                </h4>
+                <h4 class="error" id="wrongEnter">
+        
+                </h4>
+            </div>
+            <div class="textField">
+                <textarea id="text" name="eingabe"></textarea>
+            </div>
+            <div class="textField">
+                <button class="textField" id="textFieldButton" onClick="getEingabe()">
+                    Eingabe nehmen
+                </button>
+                <button class="reset" id="reset" onclick="reset('text', 'div.testButtons button', 'div.testButtons p', 'wrongEnter')">
+                    Eingabe zurücksetzen
+                </button>
+                <button class="testButtons" disabled id="allTest" type="button" onclick="doAllTest()">Alle Tests durchführen</button>
+            </div>
+            <div class="overall">
+                <h3>overall Score: </h3>
+                <p id="overallScore"></p>
+            </div>
+            <div class="testButtons">
+                <div class="column">
+                    <button class="btn btn-dark" id="freqTestButton" disabled onclick="doFqTest()">
+                        Frequency-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="freqPValue"> </p>
+                    <button class="btn btn-dark" id="freqBlockTestButton" disabled onclick="doFqBlockTest()">
+                        Frequency-Block-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="freqBlockPValue"> </p>
+                    <button class="btn btn-dark" id="gapTestButton" disabled onclick="doGapTest()">
+                        Gap-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="gapPValue"> </p>
+                    <button class="btn btn-dark" id="gapChiTestButton" disabled onclick="doGapChiTest()">
+                        Gap-Test mit Chi Quadrat durchführen.
+                    </button>
+                    <p class="coinValue" id="gapPChiValue"> </p>
+                    <button class="btn btn-dark" id="runTestButton" disabled onclick="doRunTest()">
+                        run-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="runTestValue"> </p>
+                    <button class="btn btn-dark" id="serialTestButton" disabled onclick="doSerialTest()">
+                        Serial-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="serialTestValue"> </p>
+                    <button class="btn btn-dark" id="couponCollectorTestButton" disabled onclick="doCouponCollectorTest()">
+                        Coupon-Collector-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="couponCollectorTestValue"> </p>
+                </div>
+                <div class="column">
+                    <button class="btn btn-dark" id="overlappingSerialTestButton" disabled onclick="doOverlappingSerialTest()">
+                        Überlappenden Serial-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="overlappingSerialTestValue"> </p>
+                    <button class="btn btn-dark" id="templateMatchingTestButton" disabled onclick="doTemplateMatchingTest()">
+                        Template-Matching-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="templateMatchingValue"> </p>
+                    <button class="btn btn-dark" id="overlappingTemplateMatchingTestButton" disabled onclick="doOverlappingTempMatch()">
+                        Überlappenden Template-Matching-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="overlappingTemplateMatchingValue"> </p>
+                    <button class="btn btn-dark" id="longestRunTestButton" disabled onclick="doLongestRunTest()">
+                        longest-Run-Test durchführen
+                    </button>
+                    <p class="coinValue" id="longRunTestValue"> </p>
+                    <button class="btn btn-dark" id="pokerTestButton" disabled onclick="doPokerTest()">
+                        Poker-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="pokerTestValue"> </p>
+                    <button class="btn btn-dark" id="alternationTestButton" disabled onclick="doAlternationTest()">
+                        Alternation-Test durchführen.
+                    </button>
+                    <p class="coinValue" id="alternationTest"> </p>
+                    <button class="btn btn-dark" id="matrixRankTestButton" disabled onclick="doMatrixRankTest()">
+                        Matrix-Rank-Test durchführen
+                    </button>
+                    <p class="coinValue" id="matrixRankTest"> </p>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="dice">
+                <button class="diceButton" onclick="addNumber('2')">2</button>
+                <button class="diceButton" onclick="addNumber('3')">3</button>
+                <button class="diceButton" onclick="addNumber('4')">4</button>
+                <button class="diceButton" onclick="addNumber('5')">5</button>
+                <button class="diceButton" onclick="addNumber('6')">6</button>
+                <button class="diceButton" onclick="addNumber('7')">7</button>
+            </div>
+            <div class="dice">
+                <button class="diceButton" onclick="addNumber('8')">8</button>
+                <button class="diceButton" onclick="addNumber('9')">9</button>
+                <button class="diceButton" onclick="addNumber('10')">10</button>
+                <button class="diceButton" onclick="addNumber('11')">11</button>
+                <button class="diceButton" onclick="addNumber('12')">12</button>
+            </div>
+            <div class="textField">
+                <h4>
+                    Mindestens 20 Zahlen müssen eingegeben werden
+                </h4>
+                <h4 class="diceText">Alternativ die Zahlen getrennt mit Leertaste eingeben:</h4>
+                <h4 class="error" id="wrongEnterDice"></h4>
+            </div>
+            <div class="textField">
+                <textarea id="inputDice" name="inputDice"></textarea>
+            </div>
+            <div class="textField">
+                <button class="textField" id="textFieldButtonDice" onClick="getEingabeDice()">
+                    Eingabe nehmen
+                </button>
+                <button class="reset" id="reset" onclick="reset('inputDice', 'div.testButtonsDice button', 'div.testButtonsDice p', 'wrongEnterDice', 2)">
+                    Eingabe zurücksetzen
+                </button>
+                <button class="testButtons" disabled id="allDiceTest" type="button" onclick="doAllDiceTest()">Alle Tests durchführen</button>
+            </div>
+            <div class="overall">
+                <h3>overall Score: </h3>
+                <p id="overallDiceScore"></p>
+            </div>
+            <div class="testButtonsDice">
+                <button class="btn btn-dark" disabled id="diceFrequencyTestButton" onclick="doFrequencyTestDice()" onclick="doPokerTestDice()">
+                    Frequenz-Test durchführen
+                </button>
+                <p id="diceFrequencyTestValue"> </p>
+                <button class="btn btn-dark" disabled id="dicePokerTestButton" onclick="doPokerTestDice()">
+                    Poker-Test durchführen
+                </button>
+                <p id="dicePokerTestValue"> </p>
+                <button class="btn btn-dark" disabled id="diceRunTestButton" onclick="doRunTestDice()">
+                    Run-Test durchführen
+                </button>
+                <p id="diceRunTestValue"> </p>
+                <button class="btn btn-dark" disabled id="diceSerialTestButton" onclick="doSerialTestDice()">
+                    Serial-Test durchführen
+                </button>
+                <p id="diceSerialTestValue"> </p>
+                <button class="btn btn-dark" disabled id="diceOverlappingSerialTestButton" onclick="doOverlappingSerialTestDice()">
+                    Überlappenden Serial-Test durchführen
+                </button>
+                <p id="diceOverlappingSerialTestValue"> </p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p><a href="https://tilings.math.uni-bielefeld.de/privacy/">Privacy Policy</p>
+        <p><a href="https://tilings.math.uni-bielefeld.de/imprint/">Imprint</p>
+    </footer>
+</body>
+
+
+
+<script>
+    let alreadyTested = new Array(14).fill(false)
+    let overallScore = new Array()
+    let overallDiceScore = new Array()
+    let counter = 0
+    let counterDice = 0
+    let amountOnes = 0
+    let amountZeros = 0
+    let sequence = ""
+    let sequenceDice = ""
+    let diceArray = new Array(11).fill(0)
+    let prevSequence = ""
+    function addNumber(i) {
+        //document.getElementById("inputDice").textContent = document.getElementById("inputDice").textContent + " " + i 
+        document.getElementById("inputDice").value = document.getElementById("inputDice").value + i + " " 
+        sequenceDice = sequenceDice + " " + i
+        diceArray[i-2] ++
+        document.getElementById("textFieldButtonDice").disabled = false
+    }
+    function addTail() {
+        //document.getElementById("text").textContent = document.getElementById("text").textContent + "0" 
+        document.getElementById("text").value = document.getElementById("text").value + " " + "0"
+        sequence = sequence + "0"
+        amountZeros += 1
+        document.getElementById("textFieldButton").disabled = false
+        if(sequence.length >= 20) {
+            activateButtons()
+        }
+    }
+    function addHead() {
+        //document.getElementById("text").textContent = document.getElementById("text").textContent + "1"
+        document.getElementById("text").value = document.getElementById("text").value + " " + "1"
+        sequence = sequence + "1"
+        amountOnes += 1
+        document.getElementById("textFieldButton").disabled = false
+        if(sequence.length >= 20) {
+            activateButtons()
+        }
+    }
+    function doAllTest() {
+        {
+            doFqTest()
+            doFqBlockTest()
+            doGapTest()
+            doGapChiTest()
+            doRunTest()
+            doSerialTest()
+            doCouponCollectorTest()
+            doOverlappingSerialTest()
+            doTemplateMatchingTest()
+            
+            doLongestRunTest()
+            doPokerTest()
+            doAlternationTest()
+            
+            getScore()
+            makeAllTests(true)
+            if(sequence.length < 300) {
+                doOverlappingTempMatch()
+                doMatrixRankTest()
+            }
+        }
+        
+    }
+
+    function doAllDiceTest() {
+        doFrequencyTestDice()
+        doPokerTestDice()
+        doRunTestDice()
+        doOverlappingSerialTestDice()
+        doSerialTestDice()
+        document.getElementById("allDiceTest").disabled = true
+    }
+
+    var inputText = document.getElementById("text")
+    inputText.onchange = function() {
+        document.getElementById("textFieldButton").disabled = false
+    }
+
+    var inputTextDice = document.getElementById("inputDice")
+    inputTextDice.onchange = function() {
+        document.getElementById("textFieldButtonDice").disabled = false
+    }
+
+
+
+    
+    
+</script>
+
+<style>
+    
+    .intro_top {
+        text-align: center;
+        padding-top: 15px;
+    }
+    .intro {
+        text-align: center;
+    }
+    .column {
+        float: left;
+        width: 50%;
+    }
+    .column p {
+        text-align: center;
+    }
+    .row {
+        --bs-gutter-x: 0px
+    }
+    h1 {
+        text-align: center;
+        margin: 10px;
+    }
+    h3 {
+        text-align: center;
+    }
+    .coins {
+        margin: 10px;
+        padding: 10px;
+        text-align: center;
+    }
+    .coins img {
+        width: 125px;
+        height: 125px;
+    }
+    .textField {
+        margin: auto;
+        padding: 10px;
+        text-align: center;
+    }
+    .textField textarea {
+        border-radius: 8px;
+        height: 12%;
+        width: 30%;
+    }
+    #allTest {
+        margin: auto;
+        padding: 10px;
+        text-align: center;
+        background-color: lightseagreen;
+        color: white;
+    }
+    .coinsButton {
+        border-radius: 10px;
+        padding: 20px;
+        margin: 17px;
+    }
+    h2 {
+        text-align: center;
+        padding: 4px;
+    }
+    .error {
+        color: darkmagenta
+    }
+    .testButtons {
+        text-align: center;
+    }
+    .testButtons button{
+        padding: 15px;
+    }
+    .testButtonsDice {
+        text-align: center;
+    }
+    body {
+        background-color: gray;
+    }
+    .dice {
+        text-align: center;
+        margin: 10px;
+        padding: 9px;
+    }
+    .dice button {
+        border-radius: 10px;
+        width: 67px;
+        height: 67px;
+        padding: 12.5px;
+        margin: 10px;
+    }
+    
+    .textField button {
+        background-color: lightseagreen;
+        color: white;
+        padding: 10px;
+    }
+    .overall{
+        text-align: center;
+    }
+    footer {
+        border-radius: 5px;
+        position: fixed;
+        justify-content: center;
+        bottom: 0px;
+        right: 0px;
+        margin: 5px;
+        margin-right: 10px;
+    }
+
+</style>
+
+<script src="frequencyTest.js"></script>
+<script src="frequencyBlockTest.js"></script>
+<script src="gapTest.js"></script>
+<script src="gapTestChi.js"></script>
+<script src="runTest.js"></script>
+<script src="serialTest.js"></script>
+<script src="pokerTest.js"></script>
+<script src="bundle.js"></script>
+<script src="longestRunTest.js"></script>
+<script src="alternationTest.js"></script>
+<script src="matrixRankTest.js"></script>
+<script src="overlappingSerialTest.js"></script>
+<script src="templateMatchingTest.js"></script>
+<script src="fieldTextClass.js"></script>
+<script src="overlapptingTempMatch.js"></script>
+<script src="couponCollectorTest.js"></script>
+<script src="functions.js"></script>
